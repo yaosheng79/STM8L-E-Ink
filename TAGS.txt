@@ -316,6 +316,7 @@ BKR	stdperiph_drivers\inc\stm8l15x.h	1980;"	member	struct:TIM_struct
 BOR	stdperiph_drivers\inc\stm8l15x.h	1368;"	member	struct:OPT_struct
 BRR1	stdperiph_drivers\inc\stm8l15x.h	2225;"	member	struct:USART_struct
 BRR2	stdperiph_drivers\inc\stm8l15x.h	2226;"	member	struct:USART_struct
+BUFSIZ	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	26;"	macro
 BYTE_0	stdperiph_drivers\inc\stm8l15x.h	2991;"	macro
 BYTE_1	stdperiph_drivers\inc\stm8l15x.h	2992;"	macro
 BYTE_2	stdperiph_drivers\inc\stm8l15x.h	2993;"	macro
@@ -1093,7 +1094,7 @@ DRH	stdperiph_drivers\inc\stm8l15x.h	2318;"	member	struct:ADC_struct
 DRL	stdperiph_drivers\inc\stm8l15x.h	2319;"	member	struct:ADC_struct
 DTR	stdperiph_drivers\inc\stm8l15x.h	1754;"	member	struct:TIM1_struct
 DUKR	stdperiph_drivers\inc\stm8l15x.h	1026;"	member	struct:FLASH_struct
-Delay	main.c	5;"	function	signature:(__IO uint16_t nCount)
+Delay	main.c	18;"	function	signature:(__IO uint16_t nCount)
 ECKCR	stdperiph_drivers\inc\stm8l15x.h	739;"	member	struct:CLK_struct
 EEPROM	stdperiph_drivers\inc\stm8l15x.h	134;"	macro
 EEPROM	stdperiph_drivers\inc\stm8l15x.h	140;"	macro
@@ -1102,6 +1103,7 @@ EGR	stdperiph_drivers\inc\stm8l15x.h	1731;"	member	struct:TIM1_struct
 EGR	stdperiph_drivers\inc\stm8l15x.h	1967;"	member	struct:TIM_struct
 EGR	stdperiph_drivers\inc\stm8l15x.h	2147;"	member	struct:TIM4_struct
 ENABLE	stdperiph_drivers\inc\stm8l15x.h	246;"	enumerator	enum:__anon300
+EOF	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	27;"	macro
 ERROR	stdperiph_drivers\inc\stm8l15x.h	249;"	enumerator	enum:__anon301
 ETR	stdperiph_drivers\inc\stm8l15x.h	1726;"	member	struct:TIM1_struct
 ETR	stdperiph_drivers\inc\stm8l15x.h	1962;"	member	struct:TIM_struct
@@ -1363,6 +1365,9 @@ FlagStatus	stdperiph_drivers\inc\stm8l15x.h	244;"	typedef	typeref:enum:__anon299
 FunctionalState	stdperiph_drivers\inc\stm8l15x.h	246;"	typedef	typeref:enum:__anon300
 GCR	stdperiph_drivers\inc\stm8l15x.h	644;"	member	struct:CFG_struct
 GCSR	stdperiph_drivers\inc\stm8l15x.h	2539;"	member	struct:DMA_struct
+GETCHAR_PROTOTYPE	main.c	12;"	macro	file:
+GETCHAR_PROTOTYPE	main.c	6;"	macro	file:
+GETCHAR_PROTOTYPE	main.c	9;"	macro	file:
 GIR1	stdperiph_drivers\inc\stm8l15x.h	2540;"	member	struct:DMA_struct
 GPIOA	stdperiph_drivers\inc\stm8l15x.h	2847;"	macro
 GPIOA_BASE	stdperiph_drivers\inc\stm8l15x.h	2793;"	macro
@@ -2381,8 +2386,8 @@ LCD_VoltageSource_TypeDef	stdperiph_drivers\inc\stm8l15x_lcd.h	211;"	typedef	typ
 LCD_WriteRAM	stdperiph_drivers\inc\stm8l15x_lcd.h	453;"	prototype	signature:(LCD_RAMRegister_TypeDef LCD_RAMRegister, uint8_t LCD_Data)
 LCD_WriteRAM	stdperiph_drivers\src\stm8l15x_lcd.c	474;"	function	signature:(LCD_RAMRegister_TypeDef LCD_RAMRegister, uint8_t LCD_Data)
 LCD_struct	stdperiph_drivers\inc\stm8l15x.h	2681;"	struct
-LED_GPIO_PINS	main.c	3;"	macro	file:
-LED_GPIO_PORT	main.c	2;"	macro	file:
+LED_GPIO_PINS	main.c	16;"	macro	file:
+LED_GPIO_PORT	main.c	15;"	macro	file:
 LSE_VALUE	stdperiph_drivers\inc\stm8l15x.h	117;"	macro
 LSI_FREQUENCY_MAX	stdperiph_drivers\inc\stm8l15x_beep.h	77;"	macro
 LSI_FREQUENCY_MIN	stdperiph_drivers\inc\stm8l15x_beep.h	76;"	macro
@@ -2398,6 +2403,7 @@ NEAR	stdperiph_drivers\inc\stm8l15x.h	132;"	macro
 NEAR	stdperiph_drivers\inc\stm8l15x.h	138;"	macro
 NEAR	stdperiph_drivers\inc\stm8l15x.h	152;"	macro
 NOT_CORRECT_TAMPER	stdperiph_drivers\inc\stm8l15x_rtc.h	776;"	macro
+NULL	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	30;"	macro
 NonHandledInterrupt	stm8l15x_it.h	41;"	prototype	signature:(void)
 OAR1_ADD0_Reset	stdperiph_drivers\src\stm8l15x_i2c.c	109;"	macro	file:
 OAR1_ADD0_Set	stdperiph_drivers\src\stm8l15x_i2c.c	108;"	macro	file:
@@ -2425,6 +2431,9 @@ PSCR	stdperiph_drivers\inc\stm8l15x.h	2233;"	member	struct:USART_struct
 PSCRH	stdperiph_drivers\inc\stm8l15x.h	1740;"	member	struct:TIM1_struct
 PSCRL	stdperiph_drivers\inc\stm8l15x.h	1741;"	member	struct:TIM1_struct
 PUKR	stdperiph_drivers\inc\stm8l15x.h	1025;"	member	struct:FLASH_struct
+PUTCHAR_PROTOTYPE	main.c	11;"	macro	file:
+PUTCHAR_PROTOTYPE	main.c	5;"	macro	file:
+PUTCHAR_PROTOTYPE	main.c	8;"	macro	file:
 PWR	stdperiph_drivers\inc\stm8l15x.h	2860;"	macro
 PWR_BASE	stdperiph_drivers\inc\stm8l15x.h	2812;"	macro
 PWR_CR2_VREFINTF	stdperiph_drivers\inc\stm8l15x.h	1454;"	macro
@@ -2474,8 +2483,8 @@ PWR_UltraLowPowerCmd	stdperiph_drivers\src\stm8l15x_pwr.c	194;"	function	signatu
 PWR_struct	stdperiph_drivers\inc\stm8l15x.h	1420;"	struct
 PointerAttr	stdperiph_drivers\inc\stm8l15x.h	166;"	macro
 PointerAttr	stdperiph_drivers\inc\stm8l15x.h	170;"	macro
-Power_Off	main.c	19;"	function	signature:(void)
-Power_On	main.c	14;"	function	signature:(void)
+Power_Off	main.c	28;"	function	signature:(void)
+Power_On	main.c	33;"	function	signature:(void)
 RAM	stdperiph_drivers\inc\stm8l15x.h	2689;"	member	struct:LCD_struct
 RCR	stdperiph_drivers\inc\stm8l15x.h	1480;"	member	struct:RI_struct
 RCR	stdperiph_drivers\inc\stm8l15x.h	1744;"	member	struct:TIM1_struct
@@ -5173,6 +5182,8 @@ __I	stdperiph_drivers\inc\stm8l15x.h	217;"	macro
 __IO	stdperiph_drivers\inc\stm8l15x.h	219;"	macro
 __MODS0__	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\mods0.h	11;"	macro
 __O	stdperiph_drivers\inc\stm8l15x.h	218;"	macro
+__SIZE_T__	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	9;"	macro
+__STDIO__	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	6;"	macro
 __STM8L15X_STDPERIPH_VERSION	stdperiph_drivers\inc\stm8l15x.h	197;"	macro
 __STM8L15X_STDPERIPH_VERSION_MAIN	stdperiph_drivers\inc\stm8l15x.h	193;"	macro
 __STM8L15X_STDPERIPH_VERSION_RC	stdperiph_drivers\inc\stm8l15x.h	196;"	macro
@@ -5211,7 +5222,7 @@ __STM8L15x_WFE_H	stdperiph_drivers\inc\stm8l15x_wfe.h	31;"	macro
 __STM8L15x_WWDG_H	stdperiph_drivers\inc\stm8l15x_wwdg.h	31;"	macro
 _stext	stm8l15x_it.h	40;"	prototype	signature:(void)
 _vectab	stm8_interrupt_vector.c	15;"	variable
-assert_failed	main.c	39;"	function	signature:(uint8_t* file, uint32_t line)
+assert_failed	main.c	131;"	function	signature:(uint8_t* file, uint32_t line)
 assert_failed	stm8l15x_conf.h	84;"	prototype	signature:(uint8_t* file, uint32_t line)
 assert_param	stm8l15x_conf.h	82;"	macro
 assert_param	stm8l15x_conf.h	86;"	macro
@@ -5222,6 +5233,8 @@ disableInterrupts	stdperiph_drivers\inc\stm8l15x.h	2926;"	macro
 enableInterrupts	stdperiph_drivers\inc\stm8l15x.h	2904;"	macro
 enableInterrupts	stdperiph_drivers\inc\stm8l15x.h	2914;"	macro
 enableInterrupts	stdperiph_drivers\inc\stm8l15x.h	2925;"	macro
+getchar	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	15;"	prototype	signature:(void)
+gets	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	16;"	prototype	signature:(char *s)
 halt	stdperiph_drivers\inc\stm8l15x.h	2912;"	macro
 halt	stdperiph_drivers\inc\stm8l15x.h	2922;"	macro
 halt	stdperiph_drivers\inc\stm8l15x.h	2933;"	macro
@@ -5232,25 +5245,33 @@ interrupt_handler	stm8_interrupt_vector.c	12;"	member	struct:interrupt_vector	fi
 interrupt_handler_t	stm8_interrupt_vector.c	8;"	typedef	file:
 interrupt_instruction	stm8_interrupt_vector.c	11;"	member	struct:interrupt_vector	file:
 interrupt_vector	stm8_interrupt_vector.c	10;"	struct	file:
-main	main.c	24;"	function	signature:(void)
+main	main.c	65;"	function	signature:(void)
 nop	stdperiph_drivers\inc\stm8l15x.h	2908;"	macro
 nop	stdperiph_drivers\inc\stm8l15x.h	2918;"	macro
 nop	stdperiph_drivers\inc\stm8l15x.h	2929;"	macro
+printf	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	17;"	prototype	signature:(char *format, ...)
+putchar	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	18;"	prototype	signature:(char c)
+puts	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	19;"	prototype	signature:(char *s)
 rim	stdperiph_drivers\inc\stm8l15x.h	2906;"	macro
 rim	stdperiph_drivers\inc\stm8l15x.h	2916;"	macro
 rim	stdperiph_drivers\inc\stm8l15x.h	2927;"	macro
 s16	stdperiph_drivers\inc\stm8l15x.h	234;"	typedef
 s32	stdperiph_drivers\inc\stm8l15x.h	233;"	typedef
 s8	stdperiph_drivers\inc\stm8l15x.h	235;"	typedef
+scanf	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	20;"	prototype	signature:(char *format, ...)
 sim	stdperiph_drivers\inc\stm8l15x.h	2907;"	macro
 sim	stdperiph_drivers\inc\stm8l15x.h	2917;"	macro
 sim	stdperiph_drivers\inc\stm8l15x.h	2928;"	macro
+size_t	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	10;"	typedef
+sprintf	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	22;"	prototype	signature:(char *s, char *format, ...)
+sscanf	c:\program files (x86)\cosmic\cxstm8_32k\hstm8\stdio.h	21;"	prototype	signature:(char *s, char *format, ...)
 trap	stdperiph_drivers\inc\stm8l15x.h	2909;"	macro
 trap	stdperiph_drivers\inc\stm8l15x.h	2919;"	macro
 trap	stdperiph_drivers\inc\stm8l15x.h	2930;"	macro
 u16	stdperiph_drivers\inc\stm8l15x.h	238;"	typedef
 u32	stdperiph_drivers\inc\stm8l15x.h	237;"	typedef
 u8	stdperiph_drivers\inc\stm8l15x.h	239;"	typedef
+uart_init	main.c	38;"	function	signature:(void)
 uint16_t	stdperiph_drivers\inc\stm8l15x.h	228;"	typedef
 uint32_t	stdperiph_drivers\inc\stm8l15x.h	229;"	typedef
 uint8_t	stdperiph_drivers\inc\stm8l15x.h	227;"	typedef

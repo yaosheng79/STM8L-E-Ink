@@ -1,6 +1,6 @@
 #include "stm8l15x.h"
 #include "stdio.h"
-#include "eink.h"
+#include "EPD_213.h"
 
 const uint8_t IMAGE_DATA[] = {
 /* 0X00,0X01,0X80,0X00,0XFA,0X00, */
@@ -306,7 +306,6 @@ void uart_init(void)
              (USART_Mode_TypeDef)(USART_Mode_Tx | USART_Mode_Rx));
 
   USART_SendData8(USART3, '\r');
-  /*���ڼ�鴮��UART1�Ƿ������,���ʱ��TC�жϱ�־��λ���˳���ѯ�ȴ�*/
   while (USART_GetFlagStatus(USART3, USART_FLAG_TC) == RESET);
 }
 
@@ -333,16 +332,17 @@ void main(void)
   printf("\n\rSTARTED\n\r");
 
   Power_On();
-  Epd_Init(FULL);
-  Epd_Display(IMAGE_DATA);
+  Epd_Init(EPD_FULL);
+	Epd_Clear();
+  //Epd_Display(IMAGE_DATA);
+	//Delay(0xFFFF);
   Epd_Sleep();
   Power_Off();
-/*
   while (1)
   {
 		printf("Hello!\r\n");
+		Delay(0xFFFF);
   }
-*/
 }
 
 /**

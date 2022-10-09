@@ -218,7 +218,7 @@ String.6.0=2022,10,8,14,44,51
 [Root.Source Files]
 ElemType=Folder
 PathName=Source Files
-Child=Root.Source Files.main.c
+Child=Root.Source Files.epd_213.c
 Next=Root.Include Files
 Config.0=Root.Source Files.Config.0
 Config.1=Root.Source Files.Config.1
@@ -289,6 +289,11 @@ String.4.0=
 String.5.0=
 String.6.0=2022,10,8,14,44,51
 
+[Root.Source Files.epd_213.c]
+ElemType=File
+PathName=epd_213.c
+Next=Root.Source Files.main.c
+
 [Root.Source Files.main.c]
 ElemType=File
 PathName=main.c
@@ -306,7 +311,7 @@ PathName=stm8l15x_it.c
 [Root.Include Files]
 ElemType=Folder
 PathName=Include Files
-Child=Root.Include Files.stm8l15x_conf.h
+Child=Root.Include Files.epd_213.h
 Next=Root.StdPeriph_Drivers
 Config.0=Root.Include Files.Config.0
 Config.1=Root.Include Files.Config.1
@@ -376,6 +381,11 @@ String.3.0=
 String.4.0=
 String.5.0=
 String.6.0=2022,10,8,14,44,51
+
+[Root.Include Files.epd_213.h]
+ElemType=File
+PathName=epd_213.h
+Next=Root.Include Files.stm8l15x_conf.h
 
 [Root.Include Files.stm8l15x_conf.h]
 ElemType=File

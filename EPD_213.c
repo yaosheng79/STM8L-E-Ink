@@ -1,4 +1,4 @@
-#include "eink.h"
+#include "EPD_213.h"
 
 #define EPD_RST_HIGH    GPIO_SetBits(GPIOC, GPIO_Pin_4)
 #define EPD_RST_LOW    GPIO_ResetBits(GPIOC, GPIO_Pin_4)
@@ -97,9 +97,25 @@ void SpiTransfer(uint8_t txData)
 		txData <<= 1;
 		SPI_SCK_LOW;
 		_asm("nop");
-		_asm("nop"); // 16MHzdelay 2*62.5 = 125ns
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop"); // 16MHz delay 4*62.5 = 250ns
 
 		SPI_SCK_HIGH;
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
+		_asm("nop");
 		_asm("nop");
 		_asm("nop");
 	}
@@ -121,15 +137,16 @@ void SendData(uint8_t txData)
 void Epd_Reset(void)
 {
 	EPD_RST_HIGH;
-    delay(0x200);
+    delay(0x2000);
     EPD_RST_LOW;
-    delay(0x10);
+    delay(0x100);
     EPD_RST_HIGH;
-    delay(0x200);
+    delay(0x2000);
 }
 
 void Epd_Init(const uint8_t mode)
 {
+	uint8_t count;
 	// BUSY: PC3	input
 	GPIO_Init(GPIOC, GPIO_Pin_3, GPIO_Mode_In_PU_No_IT);
 	// CS: PE6		SCK: PE7
@@ -139,15 +156,14 @@ void Epd_Init(const uint8_t mode)
 	// MOSI
 	GPIO_Init(GPIOD, GPIO_Pin_4, GPIO_Mode_Out_PP_Low_Fast);
 
-	SPI_CS_HIGH;
-	SPI_SCK_HIGH;
-
 	// PC2 low, 4pin SPI mode
 	GPIO_ResetBits(GPIOC, GPIO_Pin_2);
 
+	SPI_CS_HIGH;
+	SPI_SCK_HIGH;
+
 	Epd_Reset();
-	uint8_t count;
-	if (Mode == EPD_FULL)
+	if (mode == EPD_FULL)
 	{
 		WaitUntilIdle();
 		SendCommand(0x12); // soft reset
@@ -243,13 +259,15 @@ void Epd_Init(const uint8_t mode)
 
 void Epd_Clear(void)
 {
-    unsigned int w, h;
+    unsigned int w, i, j;
     w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
-    h = EPD_HEIGHT;
     SendCommand(0x24);
-    for (int j = 0; j < h; j++) {
-        for (int i = 0; i < w; i++) {
-            SendData(0xff);
+    for (j = 0; j < EPD_HEIGHT; j++) {
+        for (i = 0; i < w; i++) {
+						if (((j >> 4) << 4) == j)
+							SendData(0xff);
+						else
+							SendData(0xfe);
         }
     }
 
@@ -262,16 +280,17 @@ void Epd_Clear(void)
 
 void Epd_Display(const uint8_t* frame_buffer)
 {
+		unsigned int i, j;
     unsigned int w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
     unsigned int h = EPD_HEIGHT;
 
-    if (frame_buffer != NULL) {
+    if (frame_buffer != 0) {
         SendCommand(0x24);
-        for (int j = 0; j < h; j++) {
-            for (int i = 0; i < w; i++) {
-                SendData(&frame_buffer[i + j * w]);
-            }
-        }
+				for (j = 0; j < h; j++) {
+						for (i = 0; i < w; i++) {
+								SendData(*(frame_buffer + i + j * w));
+						}
+				}
     }
 
     //DISPLAY REFRESH
@@ -289,11 +308,11 @@ void Epd_Display(const uint8_t* frame_buffer)
  *          executed if check code = 0xA5.
  *          You can use Epd::Init() to awaken
  */
-void Epd::Sleep()
+void Epd_Sleep(void)
 {
     SendCommand(0x10); //enter deep sleep
     SendData(0x01);
-    delay(200);
+    delay(0x2000);
 
     EPD_RST_LOW;
 }

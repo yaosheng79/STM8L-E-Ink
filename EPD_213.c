@@ -1,9 +1,10 @@
 #include "EPD_213.h"
 
+// LOW: idle, HIGH: busy
+#define EPD_IS_BUSY  GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_3) == GPIO_Pin_3
+
 #define EPD_RST_HIGH    GPIO_SetBits(GPIOC, GPIO_Pin_4)
 #define EPD_RST_LOW    GPIO_ResetBits(GPIOC, GPIO_Pin_4)
-
-#define READ_BUSY  GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_3)
 
 #define EPD_DC_HIGH    GPIO_SetBits(GPIOC, GPIO_Pin_7)
 #define EPD_DC_LOW    GPIO_ResetBits(GPIOC, GPIO_Pin_7)
@@ -65,7 +66,7 @@ static void delay(__IO uint16_t nCount)
 // 0: timeout	1: idle
 uint8_t WaitUntilIdle(void)
 {
-	while (READ_BUSY == 0)
+	while (EPD_IS_BUSY)
 	{
 		_asm("nop");
 	}
@@ -123,14 +124,14 @@ void Epd_Reset(void)
 void Epd_Init(const uint8_t mode)
 {
 	uint8_t count;
-	// BUSY: PC3	input
-	GPIO_Init(GPIOC, GPIO_Pin_3, GPIO_Mode_In_PU_No_IT);
 	// CS: PE6		SCK: PE7
 	GPIO_Init(GPIOE, GPIO_Pin_6 | GPIO_Pin_7, GPIO_Mode_Out_PP_Low_Fast);
 	// BS1, RESET, D/C
 	GPIO_Init(GPIOC, GPIO_Pin_2 | GPIO_Pin_4 | GPIO_Pin_7, GPIO_Mode_Out_PP_Low_Fast);
 	// MOSI
 	GPIO_Init(GPIOD, GPIO_Pin_4, GPIO_Mode_Out_PP_Low_Fast);
+	// BUSY: PC3	input
+	GPIO_Init(GPIOC, GPIO_Pin_3, GPIO_Mode_In_PU_No_IT);
 
 	// PC2 low, 4pin SPI mode
 	GPIO_ResetBits(GPIOC, GPIO_Pin_2);
@@ -242,10 +243,7 @@ void Epd_Clear(void)
 	{
 		for (i = 0; i < w; i++)
 		{
-			if (((j >> 4) << 4) == j)
-				SendData(0xff);
-			else
-				SendData(0xfe);
+			SendData(0xff);
 		}
 	}
 

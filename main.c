@@ -333,8 +333,8 @@ void main(void)
 
   Power_On();
   Epd_Init(EPD_FULL);
-	Epd_Clear();
-  //Epd_Display(IMAGE_DATA);
+	//Epd_Clear();
+  Epd_Display(IMAGE_DATA);
 	//Delay(0xFFFF);
   Epd_Sleep();
   Power_Off();

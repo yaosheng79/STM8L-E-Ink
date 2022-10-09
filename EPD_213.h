@@ -5,7 +5,7 @@
 
 // Display resolution
 #define EPD_WIDTH 122
-#define EPD_HEIGHT 320
+#define EPD_HEIGHT 250
 #define BUFFER_SIZE 4000
 
 #define EPD_FULL 0

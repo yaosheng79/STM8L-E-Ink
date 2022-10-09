@@ -1,6 +1,8 @@
+epd_213.c
 main.c
 stm8_interrupt_vector.c
 stm8l15x_it.c
+epd_213.h
 stm8l15x_conf.h
 stm8l15x_it.h
 stdperiph_drivers\inc\stm8l15x_wwdg.h

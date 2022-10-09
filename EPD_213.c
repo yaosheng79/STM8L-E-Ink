@@ -65,18 +65,10 @@ static void delay(__IO uint16_t nCount)
 // 0: timeout	1: idle
 uint8_t WaitUntilIdle(void)
 {
-	uint8_t ret = 1;
-	uint16_t timeout = 0xffff;
 	while (READ_BUSY == 0)
 	{
-		timeout--;
-		if (0 == timeout)
-		{
-			ret = 0; // timeout
-			break;
-		}
+		_asm("nop");
 	}
-	return ret;
 }
 
 void SpiTransfer(uint8_t txData)
@@ -97,25 +89,9 @@ void SpiTransfer(uint8_t txData)
 		txData <<= 1;
 		SPI_SCK_LOW;
 		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop"); // 16MHz delay 4*62.5 = 250ns
+		_asm("nop"); // 16MHz delay 2*62.5 = 125ns
 
 		SPI_SCK_HIGH;
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
-		_asm("nop");
 		_asm("nop");
 		_asm("nop");
 	}
@@ -170,9 +146,9 @@ void Epd_Init(const uint8_t mode)
 		WaitUntilIdle();
 
 		SendCommand(0x74); // set analog block control
-		SendData(0x54);
+		SendData(0x54);    // A[7:0]: 54h [POR]	
 		SendCommand(0x7E); // set digital block control
-		SendData(0x3B);
+		SendData(0x3B);    // A[7:0]: 3Bh [POR]
 
 		SendCommand(0x01); // Driver output control
 		SendData(0xF9);
@@ -180,11 +156,11 @@ void Epd_Init(const uint8_t mode)
 		SendData(0x00);
 
 		SendCommand(0x11); // data entry mode
-		SendData(0x01);
+		SendData(0x01);    // 01 –Y decrement, X increment, 
 
 		SendCommand(0x44); // set Ram-X address start/end position
 		SendData(0x00);
-		SendData(0x0F); // 0x0C-->(15+1)*8=128
+		SendData(0x0F);    // 0x0F-->(15+1)*8=128
 
 		SendCommand(0x45); // set Ram-Y address start/end position
 		SendData(0xF9);	   // 0xF9-->(249+1)=250
@@ -219,7 +195,7 @@ void Epd_Init(const uint8_t mode)
 
 		SendCommand(0x4E); // set RAM x address count to 0;
 		SendData(0x00);
-		SendCommand(0x4F); // set RAM y address count to 0X127;
+		SendCommand(0x4F); // set RAM y address count to 0XF9;
 		SendData(0xF9);
 		SendData(0x00);
 		WaitUntilIdle();
@@ -259,23 +235,25 @@ void Epd_Init(const uint8_t mode)
 
 void Epd_Clear(void)
 {
-    unsigned int w, i, j;
-    w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
-    SendCommand(0x24);
-    for (j = 0; j < EPD_HEIGHT; j++) {
-        for (i = 0; i < w; i++) {
-						if (((j >> 4) << 4) == j)
-							SendData(0xff);
-						else
-							SendData(0xfe);
-        }
-    }
+	unsigned int w, i, j;
+	w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
+	SendCommand(0x24);
+	for (j = 0; j < EPD_HEIGHT; j++)
+	{
+		for (i = 0; i < w; i++)
+		{
+			if (((j >> 4) << 4) == j)
+				SendData(0xff);
+			else
+				SendData(0xfe);
+		}
+	}
 
-    //DISPLAY REFRESH
-    SendCommand(0x22);
-    SendData(0xC7);
-    SendCommand(0x20);
-    WaitUntilIdle();
+	// DISPLAY REFRESH
+	SendCommand(0x22);
+	SendData(0xC7);
+	SendCommand(0x20);
+	WaitUntilIdle();
 }
 
 void Epd_Display(const uint8_t* frame_buffer)

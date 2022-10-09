@@ -3,6 +3,14 @@
 
 #include "stm8l15x.h"
 
-void EInk_HW_Init(const uint8_t full_refresh);
+// Display resolution
+#define EPD_WIDTH 122
+#define EPD_HEIGHT 250
+
+#define EPD_FULL 0
+#define EPD_PART 1
+
+void Epd_Init(const uint8_t full_refresh);
+void Epd_Clear(void);
 
 #endif

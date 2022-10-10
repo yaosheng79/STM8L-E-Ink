@@ -146,47 +146,51 @@ void Epd_Init(const uint8_t mode)
 		SendCommand(0x12); // soft reset
 		WaitUntilIdle();
 
+		// below 2 commands are for SSD1675 (BWR) only
+		/*
 		SendCommand(0x74); // set analog block control
 		SendData(0x54);    // A[7:0]: 54h [POR]	
 		SendCommand(0x7E); // set digital block control
 		SendData(0x3B);    // A[7:0]: 3Bh [POR]
+		*/
 
+		// comments below are based on ssd1675
 		SendCommand(0x01); // Driver output control
-		SendData(0xF9);
+		SendData(0xF9);    // 0xF9: (249+1)=250 Gate lines
 		SendData(0x00);
 		SendData(0x00);
 
 		SendCommand(0x11); // data entry mode
-		SendData(0x01);    // 01 –Y decrement, X increment, 
+		SendData(0x01);    // 01 –Y decrement, X increment
 
 		SendCommand(0x44); // set Ram-X address start/end position
-		SendData(0x00);
+		SendData(0x00);    // 0x00 increase to
 		SendData(0x0F);    // 0x0F-->(15+1)*8=128
 
 		SendCommand(0x45); // set Ram-Y address start/end position
 		SendData(0xF9);	   // 0xF9-->(249+1)=250
-		SendData(0x00);
-		SendData(0x00);
+		SendData(0x00);    // decrease to
+		SendData(0x00);    // 0x00
 		SendData(0x00);
 
-		SendCommand(0x3C); // BorderWavefrom
-		SendData(0x03);
+		SendCommand(0x3C); // Border Waveform Control
+		SendData(0x03);    // 0x03: VBD Transition LUT3
 
 		SendCommand(0x2C); // VCOM Voltage
-		SendData(0x55);	   //
+		SendData(0x55);	   // 0x55: -2.125V
 
-		SendCommand(0x03);
-		SendData(lut_full_update[70]);
+		SendCommand(0x03); // Set Gate related driving voltage
+		SendData(lut_full_update[70]);	// 0x15: 19V
 
-		SendCommand(0x04); //
-		SendData(lut_full_update[71]);
-		SendData(lut_full_update[72]);
-		SendData(lut_full_update[73]);
+		SendCommand(0x04); // Set Source output voltage magnitude
+		SendData(lut_full_update[71]);	// 0x41: VSH1 at 15V
+		SendData(lut_full_update[72]);	// 0xA8: VSH2 at 5V
+		SendData(lut_full_update[73]);	// 0x32: VSL at -15V
 
-		SendCommand(0x3A); // Dummy Line
-		SendData(lut_full_update[74]);
-		SendCommand(0x3B); // Gate time
-		SendData(lut_full_update[75]);
+		SendCommand(0x3A); // Set number of dummy line period (TGate)
+		SendData(lut_full_update[74]);	// 0x30 [POR]
+		SendCommand(0x3B); // Set Gate line width (TGate)
+		SendData(lut_full_update[75]);	// 0x0A [POR]
 
 		SendCommand(0x32);
 		for (count = 0; count < 70; count++)
@@ -214,7 +218,7 @@ void Epd_Init(const uint8_t mode)
 			SendData(lut_partial_update[count]);
 		}
 
-		SendCommand(0x37);
+		SendCommand(0x37);	// Write OTP selection
 		SendData(0x00);
 		SendData(0x00);
 		SendData(0x00);
@@ -286,9 +290,12 @@ void Epd_Display(const uint8_t* frame_buffer)
  */
 void Epd_Sleep(void)
 {
-    SendCommand(0x10); //enter deep sleep
-    SendData(0x01);
+	// Deep Sleep Mode 1: Retain RAM data but cannot access the RAM
+	// Deep Sleep Mode 2: Cannot retain RAM data
+    SendCommand(0x10); // Deep Sleep mode
+    SendData(0x01);    // Enter Deep Sleep Mode 1
     delay(0x2000);
-
     EPD_RST_LOW;
+
+	// To Exit Deep Sleep mode, User required to send HWRESET to the driver
 }

@@ -139,27 +139,35 @@ void Epd_Init(const uint8_t mode)
 	SPI_CS_HIGH;
 	SPI_SCK_HIGH;
 
+	// Sequence 1
 	Epd_Reset();
 	if (mode == EPD_FULL)
 	{
+		// comments below are based on ssd1675
+		// Sequence 2
 		WaitUntilIdle();
 		SendCommand(0x12); // soft reset
 		WaitUntilIdle();
 
-		// below 2 commands are for SSD1675 (BWR) only
-		/*
+		// Sequence 3
 		SendCommand(0x74); // set analog block control
 		SendData(0x54);    // A[7:0]: 54h [POR]	
 		SendCommand(0x7E); // set digital block control
 		SendData(0x3B);    // A[7:0]: 3Bh [POR]
-		*/
 
-		// comments below are based on ssd1675
 		SendCommand(0x01); // Driver output control
 		SendData(0xF9);    // 0xF9: (249+1)=250 Gate lines
 		SendData(0x00);
 		SendData(0x00);
 
+		SendCommand(0x3A); // Set number of dummy line period (TGate)
+		SendData(lut_full_update[74]);	// 0x30 [POR]
+		SendCommand(0x3B); // Set Gate line width (TGate)
+		SendData(lut_full_update[75]);	// 0x0A [POR]
+		SendCommand(0x3C); // Border Waveform Control
+		SendData(0x03);    // 0x03: VBD Transition LUT3
+
+		// Sequence 4
 		SendCommand(0x11); // data entry mode
 		SendData(0x01);    // 01 –Y decrement, X increment
 
@@ -173,36 +181,29 @@ void Epd_Init(const uint8_t mode)
 		SendData(0x00);    // 0x00
 		SendData(0x00);
 
-		SendCommand(0x3C); // Border Waveform Control
-		SendData(0x03);    // 0x03: VBD Transition LUT3
+		SendCommand(0x4E); // set RAM x address count to 0;
+		SendData(0x00);
+		SendCommand(0x4F); // set RAM y address count to 0XF9;
+		SendData(0xF9);
+		SendData(0x00);
+/*
+		//SendCommand(0x2C); // VCOM Voltage
+		//SendData(0x55);	   // 0x55: -2.125V
 
-		SendCommand(0x2C); // VCOM Voltage
-		SendData(0x55);	   // 0x55: -2.125V
-
-		SendCommand(0x03); // Set Gate related driving voltage
-		SendData(lut_full_update[70]);	// 0x15: 19V
+		//SendCommand(0x03); // Set Gate related driving voltage
+		//SendData(lut_full_update[70]);	// 0x15: 19V
 
 		SendCommand(0x04); // Set Source output voltage magnitude
 		SendData(lut_full_update[71]);	// 0x41: VSH1 at 15V
 		SendData(lut_full_update[72]);	// 0xA8: VSH2 at 5V
 		SendData(lut_full_update[73]);	// 0x32: VSL at -15V
 
-		SendCommand(0x3A); // Set number of dummy line period (TGate)
-		SendData(lut_full_update[74]);	// 0x30 [POR]
-		SendCommand(0x3B); // Set Gate line width (TGate)
-		SendData(lut_full_update[75]);	// 0x0A [POR]
-
 		SendCommand(0x32);
 		for (count = 0; count < 70; count++)
 		{
 			SendData(lut_full_update[count]);
 		}
-
-		SendCommand(0x4E); // set RAM x address count to 0;
-		SendData(0x00);
-		SendCommand(0x4F); // set RAM y address count to 0XF9;
-		SendData(0xF9);
-		SendData(0x00);
+*/
 		WaitUntilIdle();
 	}
 	else

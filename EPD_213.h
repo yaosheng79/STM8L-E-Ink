@@ -14,6 +14,9 @@
 void Epd_Init(const uint8_t full_refresh);
 void Epd_Clear(void);
 void Epd_Display(const uint8_t* frame_buffer);
+void Epd_DisplayPartBaseImage(const uint8_t* frame_buffer);
+void Epd::DisplayPart(const uint8_t* frame_buffer);
+void Epd::ClearPart(void);
 void Epd_Sleep(void);
 
 #endif

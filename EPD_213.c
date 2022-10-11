@@ -18,23 +18,6 @@
 #define SPI_MOSI_HIGH    GPIO_SetBits(GPIOD, GPIO_Pin_4)
 #define SPI_MOSI_LOW    GPIO_ResetBits(GPIOD, GPIO_Pin_4)
 
-const uint8_t ttt[]={
-	0x22, 0x11, 0x10, 0x00, 0x10, 0x00, 0x00,
-	0x11, 0x88, 0x80, 0x80, 0x80, 0x00, 0x00,
-	0x6A, 0x9B, 0x9B, 0x9B, 0x9B, 0x00, 0x00,
-	0x6A, 0x9B, 0x9B, 0x9B, 0x9B, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0x04, 0x18, 0x04, 0x16, 0x01,
-	0x0A, 0x0A, 0x0A, 0x0A, 0x02,
-	0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00,
-	0x04, 0x04, 0x08, 0x3C, 0x07,
-	0x00, 0x00, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00,
-
-	0x15,0x41,0xA8,0x32,0x30,0x0A,							
-};
-
 const uint8_t lut_full_update[]= {
     0x80,0x60,0x40,0x00,0x00,0x00,0x00,             //LUT0: BB:     VS 0 ~7
     0x10,0x60,0x20,0x00,0x00,0x00,0x00,             //LUT1: BW:     VS 0 ~7
@@ -218,7 +201,7 @@ void Epd_Init(const uint8_t mode)
 		SendCommand(0x32);
 		for (count = 0; count < 70; count++)
 		{
-			SendData(ttt[count]);
+			SendData(lut_full_update[count]);
 		}
 
 		WaitUntilIdle();
@@ -278,13 +261,12 @@ void Epd_Clear(void)
 
 void Epd_Display(const uint8_t* frame_buffer)
 {
-		unsigned int i, j;
+	unsigned int i, j;
     unsigned int w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
-    unsigned int h = EPD_HEIGHT;
 
     if (frame_buffer != 0) {
         SendCommand(0x24);
-				for (j = 0; j < h; j++) {
+				for (j = 0; j < EPD_HEIGHT; j++) {
 						for (i = 0; i < w; i++) {
 								SendData(*(frame_buffer + i + j * w));
 						}
@@ -294,6 +276,71 @@ void Epd_Display(const uint8_t* frame_buffer)
     //DISPLAY REFRESH
     SendCommand(0x22);
     SendData(0xC7);
+    SendCommand(0x20);
+    WaitUntilIdle();
+}
+
+void Epd_DisplayPartBaseImage(const uint8_t* frame_buffer)
+{
+    int w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
+
+    if (frame_buffer != 0) {
+        SendCommand(0x24);
+        for (int j = 0; j < EPD_HEIGHT; j++) {
+            for (int i = 0; i < w; i++) {
+                SendData(*(frame_buffer + i + j * w));
+            }
+        }
+
+        SendCommand(0x26);
+        for (int j = 0; j < EPD_HEIGHT; j++) {
+            for (int i = 0; i < w; i++) {
+                SendData(*(frame_buffer + i + j * w));
+            }
+        }
+    }
+
+    //DISPLAY REFRESH
+    SendCommand(0x22);
+    SendData(0xC7);
+    SendCommand(0x20);
+    WaitUntilIdle();
+}
+
+void Epd::DisplayPart(const uint8_t* frame_buffer)
+{
+    int w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
+
+    if (frame_buffer != 0) {
+        SendCommand(0x24);
+        for (int j = 0; j < EPD_HEIGHT; j++) {
+            for (int i = 0; i < w; i++) {
+                SendData(*(frame_buffer + i + j * w));
+            }
+        }
+    }
+
+    //DISPLAY REFRESH
+    SendCommand(0x22);
+    SendData(0x0C);
+    SendCommand(0x20);
+    WaitUntilIdle();
+}
+
+void Epd::ClearPart(void)
+{
+    int w;
+    w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
+    SendCommand(0x24);
+    for (int j = 0; j < EPD_HEIGHT; j++) {
+        for (int i = 0; i < w; i++) {
+            SendData(0xff);
+        }
+    }
+
+    //DISPLAY REFRESH
+    SendCommand(0x22);
+    SendData(0x0C);
     SendCommand(0x20);
     WaitUntilIdle();
 }

@@ -309,6 +309,7 @@ void uart_init(void)
   while (USART_GetFlagStatus(USART3, USART_FLAG_TC) == RESET);
 }
 
+uint8_t i;
 void main(void)
 {
   /* Initialize LEDs mounted on STM8L152X-EVAL board */
@@ -338,6 +339,19 @@ void main(void)
 	Delay(0xFFFF);
   Epd_Display(IMAGE_DATA);
 	Delay(0xFFFF);
+
+  printf("epd PART");
+  Epd_DisplayPartBaseImage(IMAGE_DATA);
+  for (i = 0; i < 10; i++) {
+    printf("e-Paper PART IMAGE_DATA\r\n");
+    Epd_Init(EPD_PART);
+    Epd_DisplayPart(IMAGE_DATA);
+    printf("e-Paper PART Clear\r\n");
+    Epd_ClearPart();
+  }
+  
+  Epd_Init(EPD_FULL);
+  printf("e-Paper clear and slee\r\np");
 
   Epd_Sleep();
   Power_Off();

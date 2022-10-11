@@ -99,12 +99,10 @@ void SpiTransfer(uint8_t txData)
 		}
 		txData <<= 1;
 		SPI_SCK_LOW;
-		_asm("nop");
-		_asm("nop"); // 16MHz delay 2*62.5 = 125ns
+		// _asm("nop"); // 16MHz nop = 62.5ns
 
 		SPI_SCK_HIGH;
-		_asm("nop");
-		_asm("nop");
+		// _asm("nop");
 	}
 	SPI_CS_HIGH;
 }
@@ -293,18 +291,19 @@ void Epd_Display(const uint8_t* frame_buffer)
 void Epd_DisplayPartBaseImage(const uint8_t* frame_buffer)
 {
     int w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
+		unsigned int i, j;
 
-    if (frame_buffer != 0) {
+		if (frame_buffer != 0) {
         SendCommand(0x24);
-        for (int j = 0; j < EPD_HEIGHT; j++) {
-            for (int i = 0; i < w; i++) {
+        for (j = 0; j < EPD_HEIGHT; j++) {
+            for (i = 0; i < w; i++) {
                 SendData(*(frame_buffer + i + j * w));
             }
         }
 
         SendCommand(0x26);
-        for (int j = 0; j < EPD_HEIGHT; j++) {
-            for (int i = 0; i < w; i++) {
+        for (j = 0; j < EPD_HEIGHT; j++) {
+            for (i = 0; i < w; i++) {
                 SendData(*(frame_buffer + i + j * w));
             }
         }
@@ -317,14 +316,15 @@ void Epd_DisplayPartBaseImage(const uint8_t* frame_buffer)
     WaitUntilIdle();
 }
 
-void Epd::DisplayPart(const uint8_t* frame_buffer)
+void Epd_DisplayPart(const uint8_t* frame_buffer)
 {
     int w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
+		unsigned int i, j;
 
     if (frame_buffer != 0) {
         SendCommand(0x24);
-        for (int j = 0; j < EPD_HEIGHT; j++) {
-            for (int i = 0; i < w; i++) {
+        for (j = 0; j < EPD_HEIGHT; j++) {
+            for (i = 0; i < w; i++) {
                 SendData(*(frame_buffer + i + j * w));
             }
         }
@@ -337,13 +337,14 @@ void Epd::DisplayPart(const uint8_t* frame_buffer)
     WaitUntilIdle();
 }
 
-void Epd::ClearPart(void)
+void Epd_ClearPart(void)
 {
+		unsigned int i, j;
     int w;
     w = (EPD_WIDTH % 8 == 0)? (EPD_WIDTH / 8 ): (EPD_WIDTH / 8 + 1);
     SendCommand(0x24);
-    for (int j = 0; j < EPD_HEIGHT; j++) {
-        for (int i = 0; i < w; i++) {
+    for (j = 0; j < EPD_HEIGHT; j++) {
+        for (i = 0; i < w; i++) {
             SendData(0xff);
         }
     }

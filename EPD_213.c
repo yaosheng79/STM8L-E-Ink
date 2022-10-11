@@ -54,22 +54,6 @@ const uint8_t lut_partial_update[]= { //20 bytes
     0x15,0x41,0xA8,0x32,0x30,0x0A,
 };
 
-const uint8_t lut[30] = {
-	0x02, 0x02, 0x01, 0x11, 0x12, 0x12, 0x22, 0x22, 
-	0x66, 0x69, 0x69, 0x59, 0x58, 0x99, 0x99, 0x88, 
-	0x00, 0x00, 0x00, 0x00, 
-	0xf8, 0xb4, 0x13, 0x51, 0x35, 0x51, 0x51, 0x19, 
-	0x01, 0x00
-};
-
-const uint8_t EPD_lut[30]={
-  0x66, 0xa6, 0x6a, 0x66, 0x55, 0x99, 0xaa, 0x66,
-  0x55, 0x95, 0xaa, 0xaa, 0x59, 0x55, 0xaa, 0x55,
-  0x88, 0x11, 0x11, 0x88,
-  0xf8, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-  0x8f, 0x8f,
-};
-
 static void delay(__IO uint16_t nCount)
 {
 	/* Decrement nCount value */
@@ -162,42 +146,20 @@ void Epd_Init(const uint8_t mode)
 		SendCommand(0x12); // soft reset
 		WaitUntilIdle();
 
+		// below 2 commands are for SSD1675 (BWR) only
+		/*
+		SendCommand(0x74); // set analog block control
+		SendData(0x54);    // A[7:0]: 54h [POR]	
+		SendCommand(0x7E); // set digital block control
+		SendData(0x3B);    // A[7:0]: 3Bh [POR]
+		*/
+
 		// comments below are based on ssd1675
 		SendCommand(0x01); // Driver output control
 		SendData(0xF9);    // 0xF9: (249+1)=250 Gate lines
 		SendData(0x00);
 		SendData(0x00);
 
-		SendCommand(0x3A);	// Set dummy line period
-		SendData(0x16);		// or 0x1B?? from .py
-		SendCommand(0x3B);	// Set Gate line width
-		SendData(0x08);		// or 0x0B?? from .py
-
-		SendCommand(0x3C);	// Set Gate line width
-		SendData(0x33);
-
-		SendCommand(0x11); // data entry mode
-		SendData(0x01);    // 01 –Y decrement, X increment
-
-		SendCommand(0x44); // set Ram-X address start/end position
-		SendData(0x00);    // 0x00 increase to
-		SendData(0x0F);    // 0x0F-->(15+1)*8=128
-
-		SendCommand(0x45); // set Ram-Y address start/end position
-		SendData(0xF9);	   // 0xF9-->(249+1)=250
-		SendData(0x00);    // decrease to
-		SendData(0x00);    // 0x00
-		SendData(0x00);
-
-		SendCommand(0x2C); // VCOM Voltage
-		SendData(0xB9);	   // or 0x70?? from .py
-
-		SendCommand(0x32);
-		for (count = 0; count < 30; count++)
-		{
-			SendData(EPD_lut[count]);
-		}
-		/*
 		SendCommand(0x11); // data entry mode
 		SendData(0x01);    // 01 –Y decrement, X increment
 
@@ -235,7 +197,7 @@ void Epd_Init(const uint8_t mode)
 		{
 			SendData(lut_full_update[count]);
 		}
-*/
+
 		SendCommand(0x4E); // set RAM x address count to 0;
 		SendData(0x00);
 		SendCommand(0x4F); // set RAM y address count to 0XF9;

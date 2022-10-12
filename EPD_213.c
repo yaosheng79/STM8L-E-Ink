@@ -62,11 +62,11 @@ const uint8_t lut_full_update[]= {
 	0x00,0x00,0x00,0x00,0x00,					   // TP6A ~ TP6D, RP6
 
 	// Command 0x03: Set Gate related driving voltage
-	0x19,		// VGH at 19V (POR is 0x19, 21V)
+	0x15,		// VGH at 19V(0x15) (POR is 0x19, 21V)
 	// Command 0x04: Source Driving voltage Control 
-	0x50,		// VSH1 at 15V(0x41), 18V(0x50)
+	0x41,		// VSH1 at 15V(0x41)
 	0xA8,		// VSH2 at 5V(0xA8)
-	0x3E,		// VSL at -15V(0x32), -18V(0x3E)
+	0x32,		// VSL at -15V(0x32)
 	// Below 2 commands will give 50Hz Frame frequency under 48 dummy line pulse setting.
 	// Command 0x3A: Set number of dummy line period (TGate)
 	0x30,
@@ -95,11 +95,11 @@ const uint8_t lut_partial_update[]= { //20 bytes
 	0x00,0x00,0x00,0x00,0x00,					   // TP6A ~ TP6D, RP6
 
 	// Command 0x03: Set Gate related driving voltage
-	0x19,		// VGH at 19V (POR is 0x19, 21V)
+	0x15,		// VGH at 19V(0x15) (POR is 0x19, 21V)
 	// Command 0x04: Source Driving voltage Control 
-	0x50,		// VSH1 at 15V(0x41), 18V(0x50)
+	0x41,		// VSH1 at 15V(0x41)
 	0xA8,		// VSH2 at 5V(0xA8)
-	0x3E,		// VSL at -15V(0x32), -18V(0x3E)
+	0x32,		// VSL at -15V(0x32)
 	// Below 2 commands will give 50Hz Frame frequency under 48 dummy line pulse setting.
 	// Command 0x3A: Set number of dummy line period (TGate)
 	0x30,
@@ -238,8 +238,8 @@ void Epd_Init(const uint8_t mode)
 		SendData(0xF9);
 		SendData(0x00);
 
-		// SendCommand(0x2C); // VCOM Voltage
-		// SendData(0x55);	   // 0x55: -2.125V
+		SendCommand(0x2C); // VCOM Voltage
+		SendData(0x55);	   // 0x55: -2.125V
 		SendCommand(0x03); // Set Gate related driving voltage
 		SendData(lut_full_update[70]);	// 0x15: 19V
 

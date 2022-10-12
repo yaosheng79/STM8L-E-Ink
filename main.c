@@ -352,7 +352,7 @@ void main(void)
   
   Epd_Init(EPD_FULL);
   printf("e-Paper clear and slee\r\np");
-
+	Epd_Clear();
   Epd_Sleep();
   Power_Off();
   while (1)

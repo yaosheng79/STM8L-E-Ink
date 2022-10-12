@@ -238,8 +238,8 @@ void Epd_Init(const uint8_t mode)
 		SendData(0xF9);
 		SendData(0x00);
 
-		SendCommand(0x2C); // VCOM Voltage
-		SendData(0x55);	   // 0x55: -2.125V
+		SendCommand(0x2C); // VCOM Voltagee, the smaller, the whiter
+		SendData(0x50);	   // 0x50: -2V
 		SendCommand(0x03); // Set Gate related driving voltage
 		SendData(lut_full_update[70]);	// 0x15: 19V
 
@@ -258,8 +258,8 @@ void Epd_Init(const uint8_t mode)
 	}
 	else
 	{
-		SendCommand(0x2C); // VCOM Voltage
-		SendData(0x26);    // 0x26: -0.95V
+		SendCommand(0x2C); // VCOM Voltage, the smaller, the whiter
+		SendData(0x24);    // 0x24: -0.9V
 		WaitUntilIdle();
 
 		SendCommand(0x32);

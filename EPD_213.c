@@ -62,11 +62,11 @@ const uint8_t lut_full_update[]= {
 	0x00,0x00,0x00,0x00,0x00,					   // TP6A ~ TP6D, RP6
 
 	// Command 0x03: Set Gate related driving voltage
-	0x15,		// VGH at 19V (POR is 0x19, 21V)
+	0x19,		// VGH at 19V (POR is 0x19, 21V)
 	// Command 0x04: Source Driving voltage Control 
-	0x41,		// VSH1 at 15V
-	0xA8,		// VSH2 at 5V
-	0x32,		// VSL at -15V
+	0x50,		// VSH1 at 15V(0x41), 18V(0x50)
+	0xA8,		// VSH2 at 5V(0xA8)
+	0x3E,		// VSL at -15V(0x32), -18V(0x3E)
 	// Below 2 commands will give 50Hz Frame frequency under 48 dummy line pulse setting.
 	// Command 0x3A: Set number of dummy line period (TGate)
 	0x30,
@@ -94,7 +94,17 @@ const uint8_t lut_partial_update[]= { //20 bytes
 	0x00,0x00,0x00,0x00,0x00,					   // TP5A ~ TP5D, RP5
 	0x00,0x00,0x00,0x00,0x00,					   // TP6A ~ TP6D, RP6
 
-	0x15,0x41,0xA8,0x32,0x30,0x0A,
+	// Command 0x03: Set Gate related driving voltage
+	0x19,		// VGH at 19V (POR is 0x19, 21V)
+	// Command 0x04: Source Driving voltage Control 
+	0x50,		// VSH1 at 15V(0x41), 18V(0x50)
+	0xA8,		// VSH2 at 5V(0xA8)
+	0x3E,		// VSL at -15V(0x32), -18V(0x3E)
+	// Below 2 commands will give 50Hz Frame frequency under 48 dummy line pulse setting.
+	// Command 0x3A: Set number of dummy line period (TGate)
+	0x30,
+	// Command 0x3B: Set Gate line width (TGate)
+	0x0A,
 };
 
 static void delay(__IO uint16_t nCount)
@@ -227,18 +237,17 @@ void Epd_Init(const uint8_t mode)
 		SendCommand(0x4F); // set RAM y address count to 0XF9;
 		SendData(0xF9);
 		SendData(0x00);
-		/*
-				//SendCommand(0x2C); // VCOM Voltage
-				//SendData(0x55);	   // 0x55: -2.125V
 
-				//SendCommand(0x03); // Set Gate related driving voltage
-				//SendData(lut_full_update[70]);	// 0x15: 19V
+		// SendCommand(0x2C); // VCOM Voltage
+		// SendData(0x55);	   // 0x55: -2.125V
+		SendCommand(0x03); // Set Gate related driving voltage
+		SendData(lut_full_update[70]);	// 0x15: 19V
 
-				SendCommand(0x04); // Set Source output voltage magnitude
-				SendData(lut_full_update[71]);	// 0x41: VSH1 at 15V
-				SendData(lut_full_update[72]);	// 0xA8: VSH2 at 5V
-				SendData(lut_full_update[73]);	// 0x32: VSL at -15V
-		*/
+		SendCommand(0x04); // Set Source output voltage magnitude
+		SendData(lut_full_update[71]);	// 0x41: VSH1 at 15V
+		SendData(lut_full_update[72]);	// 0xA8: VSH2 at 5V
+		SendData(lut_full_update[73]);	// 0x32: VSL at -15V
+
 		SendCommand(0x32);
 		for (count = 0; count < 70; count++)
 		{
@@ -250,8 +259,7 @@ void Epd_Init(const uint8_t mode)
 	else
 	{
 		SendCommand(0x2C); // VCOM Voltage
-		SendData(0x26);
-
+		SendData(0x26);    // 0x26: -0.95V
 		WaitUntilIdle();
 
 		SendCommand(0x32);
@@ -269,13 +277,12 @@ void Epd_Init(const uint8_t mode)
 		SendData(0x00);
 		SendData(0x00);
 
-		SendCommand(0x22);
-		SendData(0xC0);
-
-		SendCommand(0x20);
+		SendCommand(0x22); // Display Update Sequence Option
+		SendData(0xC0);	   // 0xC0: (CLKEN=1, ANALOGEN=1) Enable Clock Signal, Enable ANALOG
+		SendCommand(0x20); // Activate Display Update Sequence
 		WaitUntilIdle();
 
-		SendCommand(0x3C); // BorderWavefrom
+		SendCommand(0x3C); // Border Waveform Control
 		SendData(0x01);
 	}
 }

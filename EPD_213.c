@@ -29,7 +29,7 @@
 // 		which is used for the count of repeating TP[nA] ~ TP[nD]; 
 // RP[n] = 0 indicates run time =1,
 const uint8_t lut_full_update[]= {
-	// 00: VSS (VCOM)	01: VSH1(WB)	10: VSL(BW)	11: VSH2(WB)
+	// 00: VSS (VCOM)	01: VSH1(WB) 15V	10: VSL(BW) -15V	11: VSH2(WB) 5V
 	// Group 0 0x80: 10 00 00 00	BW __
 	// Group 1 0x60: 01 10 00 00	WB BW
 	// Group 2 0x40: 01 00 00 00	WB __

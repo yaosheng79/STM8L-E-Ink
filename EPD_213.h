@@ -19,4 +19,7 @@ void Epd_DisplayPart(const uint8_t* frame_buffer);
 void Epd_ClearPart(void);
 void Epd_Sleep(void);
 
+void Epd_SetWindows(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend);
+void Epd_SetCursor(uint16_t Xstart, uint16_t Ystart);
+
 #endif

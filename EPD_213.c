@@ -220,29 +220,28 @@ void Epd_Init(const uint8_t mode)
 
 		// Sequence 4
 		SendCommand(0x11); // data entry mode
-		SendData(0x01);	   // 01 –Y decrement, X increment
+		SendData(0x03);	   // 01 –Y increment, X increment
 
 		SendCommand(0x44); // set Ram-X address start/end position
 		SendData(0x00);	   // 0x00 increase to
 		SendData(0x0F);	   // 0x0F-->(15+1)*8=128
 
 		SendCommand(0x45); // set Ram-Y address start/end position
-		SendData(0xF9);	   // 0xF9-->(249+1)=250
-		SendData(0x00);	   // decrease to
 		SendData(0x00);	   // 0x00
+		SendData(0x00);	   // increase to
+		SendData(0xF9);	   // 0xF9-->(249+1)=250
 		SendData(0x00);
 
 		SendCommand(0x4E); // set RAM x address count to 0;
 		SendData(0x00);
-		SendCommand(0x4F); // set RAM y address count to 0XF9;
-		SendData(0xF9);
+		SendCommand(0x4F); // set RAM y address count to 0;
+		SendData(0x00);
 		SendData(0x00);
 
 		SendCommand(0x2C); // VCOM Voltagee, the smaller, the whiter
 		SendData(0x50);	   // 0x50: -2V
 		SendCommand(0x03); // Set Gate related driving voltage
 		SendData(lut_full_update[70]);	// 0x15: 19V
-
 		SendCommand(0x04); // Set Source output voltage magnitude
 		SendData(lut_full_update[71]);	// 0x41: VSH1 at 15V
 		SendData(lut_full_update[72]);	// 0xA8: VSH2 at 5V
@@ -289,9 +288,9 @@ void Epd_Init(const uint8_t mode)
 
 void Epd_Clear(void)
 {
-	unsigned int w, i, j;
+	uint16_t w, i, j;
 	w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
-	SendCommand(0x24);
+	SendCommand(0x24);		// Write RAM (BW)
 	for (j = 0; j < EPD_HEIGHT; j++)
 	{
 		for (i = 0; i < w; i++)
@@ -302,19 +301,44 @@ void Epd_Clear(void)
 
 	// DISPLAY REFRESH
 	SendCommand(0x22);
-	SendData(0xC7);
-	SendCommand(0x20);
+	SendData(0xC7);		// Enable Clock Signal, Enable ANALOG, DISPLAY, Disable ANALOG, Disable OSC
+	SendCommand(0x20);	// Activate Display Update Sequence
 	WaitUntilIdle();
+}
+
+// Setting the display window
+void Epd_SetWindows(uint16_t Xstart, uint16_t Ystart, uint16_t Xend, uint16_t Yend)
+{
+    SendCommand(0x44); // SET_RAM_X_ADDRESS_START_END_POSITION
+    SendData((Xstart>>3) & 0xFF);
+    SendData((Xend>>3) & 0xFF);
+	
+    SendCommand(0x45); // SET_RAM_Y_ADDRESS_START_END_POSITION
+    SendData(Ystart & 0xFF);
+    SendData((Ystart >> 8) & 0xFF);
+    SendData(Yend & 0xFF);
+    SendData((Yend >> 8) & 0xFF);
+}
+
+// Set Cursor
+void Epd_SetCursor(uint16_t Xstart, uint16_t Ystart)
+{
+    SendCommand(0x4E); // SET_RAM_X_ADDRESS_COUNTER
+    SendData(Xstart & 0xFF);
+
+    SendCommand(0x4F); // SET_RAM_Y_ADDRESS_COUNTER
+    SendData(Ystart & 0xFF);
+    SendData((Ystart >> 8) & 0xFF);
 }
 
 void Epd_Display(const uint8_t *frame_buffer)
 {
-	unsigned int i, j;
-	unsigned int w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
+	uint16_t i, j;
+	uint8_t w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
 
 	if (frame_buffer != 0)
 	{
-		SendCommand(0x24);
+		SendCommand(0x24);		// Write RAM (BW)
 		for (j = 0; j < EPD_HEIGHT; j++)
 		{
 			for (i = 0; i < w; i++)
@@ -326,19 +350,19 @@ void Epd_Display(const uint8_t *frame_buffer)
 
 	// DISPLAY REFRESH
 	SendCommand(0x22);
-	SendData(0xC7);
+	SendData(0xC7);		// Enable Clock Signal, Enable ANALOG, DISPLAY, Disable ANALOG, Disable OSC
 	SendCommand(0x20);
 	WaitUntilIdle();
 }
 
 void Epd_DisplayPartBaseImage(const uint8_t *frame_buffer)
 {
-	int w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
-	unsigned int i, j;
+	uint16_t i, j;
+	uint8_t w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
 
 	if (frame_buffer != 0)
 	{
-		SendCommand(0x24);
+		SendCommand(0x24);	// Write RAM (BW)
 		for (j = 0; j < EPD_HEIGHT; j++)
 		{
 			for (i = 0; i < w; i++)
@@ -347,7 +371,7 @@ void Epd_DisplayPartBaseImage(const uint8_t *frame_buffer)
 			}
 		}
 
-		SendCommand(0x26);
+		SendCommand(0x26);	// Write RAM (RED)
 		for (j = 0; j < EPD_HEIGHT; j++)
 		{
 			for (i = 0; i < w; i++)
@@ -359,15 +383,15 @@ void Epd_DisplayPartBaseImage(const uint8_t *frame_buffer)
 
 	// DISPLAY REFRESH
 	SendCommand(0x22);
-	SendData(0xC7);
+	SendData(0xC7);		// Enable Clock Signal, Enable ANALOG, DISPLAY, Disable ANALOG, Disable OSC
 	SendCommand(0x20);
 	WaitUntilIdle();
 }
 
 void Epd_DisplayPart(const uint8_t *frame_buffer)
 {
-	int w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
-	unsigned int i, j;
+	uint8_t w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
+	uint16_t i, j;
 
 	if (frame_buffer != 0)
 	{
@@ -390,10 +414,10 @@ void Epd_DisplayPart(const uint8_t *frame_buffer)
 
 void Epd_ClearPart(void)
 {
-	unsigned int i, j;
-	int w;
+	uint16_t i, j;
+	uint8_t w;
 	w = (EPD_WIDTH % 8 == 0) ? (EPD_WIDTH / 8) : (EPD_WIDTH / 8 + 1);
-	SendCommand(0x24);
+	SendCommand(0x24);	// Write RAM (BW)
 	for (j = 0; j < EPD_HEIGHT; j++)
 	{
 		for (i = 0; i < w; i++)

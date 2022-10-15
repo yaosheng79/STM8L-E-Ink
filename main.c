@@ -2,6 +2,18 @@
 #include "stdio.h"
 #include "EPD_213.h"
 
+const uint8_t CHAR_A[] = {
+  // @264 'A' (5 pixels wide)
+	0x60, //  ##  
+	0x20, //   #  
+	0x50, //  # # 
+	0x70, //  ### 
+	0x88, // #   #
+	0xD8, // ## ##
+	0x00, //      
+	0x00, //      
+};
+
 const uint8_t IMAGE_DATA[] = {
 /* 0X00,0X01,0X80,0X00,0XFA,0X00, */
 0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
